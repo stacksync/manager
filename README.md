@@ -1,0 +1,4 @@
+manager
+=======
+
+StackSync user manager
