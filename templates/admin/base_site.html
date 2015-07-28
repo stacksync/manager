@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Stacksync Administration Tool' %}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">{% trans 'Stacksync Administration Tool' %}</h1>
+{% endblock %}
+
+{% block nav-global %}
+
+    <!--form id="form_select_lang" action="/i18n/setlang/" method="post">
+        <p align = "right">
+            {% csrf_token %}
+            <select name="language" id="select_lang">
+            {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+                <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>{{ language.name_local }}</option>
+            {% endfor %}
+            </select>
+        </p>
+
+        esto estaba abajo y lo he cambiado
+        <form action="{% url 'set_language' %}" method="post">
+    </form-->
+
+   <form id="form_select_lang" action="/i18n/setlang/" method="post">
+        <p align = "right">
+            {% csrf_token %}
+            <!--input name="next" type="hidden" value="{{ redirect_to }}" /-->
+                <select name="language">
+                {% get_language_info_list for LANGUAGES as languages %}
+                {% for language in languages %}
+                    <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %} selected="selected"{% endif %}>{{ language.name_local }}</option>
+                {% endfor %}
+                </select>
+            <input type="submit" value= {% trans "Go" %} />
+        </p>
+    </form>
+
+{% endblock %}
