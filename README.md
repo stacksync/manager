@@ -1,66 +1,31 @@
-manager
+StackSync Web Manager
 =======
 
-StackSync user manager
+The StackSync web manager is a tool that allows to create and manage groups and users for StackSync.
 
-sudo apt-get install libpq-dev
-sudo apt-get install python-dev
+# Installation
 
-To create the database tables:
-```
-manage.py syncdb
-```
+First, install dependencies:
 
-Better update your current working stacksync database with:
-```
-ALTER TABLE workspace_user add column id uuid;
-```
+    sudo apt-get install libpq-dev
+    sudo apt-get install python-dev
+    pip install -r requirements.txt
 
-To install requirements necessary for the project to run:
-```pip install -r requirements.txt```
+Once the requirements are installed, we have to create database tables for the manager. Before to sync the database, you have to change the settings.py file located [here](stacksync_manager/settings.py). After that, you just need to run the following command:
 
-pkill -9 -f stacksync_user
-do syncdb
+    sudo python manage.py syncdb
 
-Update correct content_types for proxy model
-```
-from django.contrib.contenttypes.models import ContentType
-group_user_type = ContentType.objects.filter(name='StacksyncGroupUser').first()
+This command will create necessary tables in the StackSync database.
 
-from django.contrib.auth.models import Permission
-Permission.objects.filter(name__contains='StacksyncGroupUser')
-Permission.objects.filter(name__contains='StacksyncGroupUser').update(content_type=group_user_type)
-```
+# Execution
 
-Restart services:
-service stacksync-server restart
-swift-init proxy restart
+To run the manager interface you can configure the django project on top of Apache or you can execute directly the following command:
 
-------------------------------------------------------
-```
-from django.contrib.auth.models import Group, Permission, User
-p = Permission.objects.filter(content_type__app_label='groups').exclude(name='Can add stacksync group').exclude(name='Can delete stacksync group')
-stacksync = Group.objects.create(name='stacksync')
-stacksync.permissions = p
-stacksync.save()
+    sudo python manage.py runserver 0.0.0.0:80
 
-valencia_ad = User.objects.create(username='valencia', is_staff=True)
-valencia_ad.groups.add(stacksync)
-valencia_ad.set_password('valencia')
-valencia_ad.save()
-```
---------------------------------------
-This is an example to get a Group admin called 'valencia', creating a group 'valencia' with a quota of 100, and assign the admin to the quota
-```
-from groups.models import StacksyncGroup
-valencia_ad = User.objects.get(username='valencia', is_staff=True)
-group = StacksyncGroup.objects.create(name='valencia', quota=100)
-group.admins.add(valencia_ad)
-group.save()
-group.admins.first()
-```
-----------------------------------------------------------
+# Manual
 
+TBD
 
 
 
